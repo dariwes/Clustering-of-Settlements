@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, aliased
 from models import Settlement, Duration, Base
 
 
@@ -45,6 +45,29 @@ class DatabaseManager:
         return session.query(
             Settlement.id, Settlement.latitude, Settlement.longitude
         ).all()
+
+    def get_all_durations(self):
+        session = self.Session()
+        return session.query(
+            Duration.settlement_1_id,
+            Duration.settlement_2_id,
+            Duration.duration
+        ).all()
+
+    def get_certain_durations(self, min_duration, max_duration):
+        session = self.Session()
+        return session.query(
+            Settlement.name,
+            Settlement.latitude,
+            Settlement.longitude,
+        ).join(
+            Duration,
+            Duration.settlement_1_id == Settlement.id or
+            Duration.settlement_2_id == Settlement.id
+        ).filter(
+            Duration.duration > min_duration,
+            Duration.duration <= max_duration
+        ).distinct().all()
 
     def drop_tables(self):
         Base.metadata.drop_all(self.engine)

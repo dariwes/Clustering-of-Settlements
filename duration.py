@@ -1,6 +1,7 @@
 import asyncio
-from settlements import get_all_coordinates
+import csv
 import aiohttp
+from settlements import get_all_coordinates
 from db_manager import DatabaseManager
 from config import db_settings
 
@@ -72,5 +73,9 @@ def get_data():
     return future.result()
 
 
-db_manager = DatabaseManager(**db_settings)
-db_manager.insert_durations(get_data())
+def write_csv_durations():
+    db_manager = DatabaseManager(**db_settings)
+    durations = list(db_manager.get_all_durations())
+    with open('durations.csv', 'w') as csv_file:
+        csv_writer = csv.writer(csv_file)
+        csv_writer.writerows(durations)
