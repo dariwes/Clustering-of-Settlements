@@ -1,12 +1,12 @@
 import asyncio
-import csv
 import aiohttp
 from settlements import get_all_coordinates
-from db_manager import DatabaseManager
-from config import db_settings
 
 
-URL = 'https://api.mapbox.com/directions/v5/mapbox/driving/{};{}?access_token={}'
+URL = (
+    'https://api.mapbox.com/'
+    'directions/v5/mapbox/driving/{};{}?access_token={}'
+)
 TOKEN = 'TODO: your token'
 TASKS_SIZE = 1000
 QUEUE_SIZE = 1500
@@ -48,7 +48,7 @@ async def fetch_duration(queue, durations):
                 queue.task_done()
 
 
-async def get_durations():
+async def fetch_durations():
     queue = asyncio.Queue(maxsize=QUEUE_SIZE)
     coordinates = get_all_coordinates()
     tasks = []
@@ -66,16 +66,8 @@ async def get_durations():
     return durations
 
 
-def get_data():
+def get_durations():
     loop = asyncio.get_event_loop()
-    future = asyncio.ensure_future(get_durations())
+    future = asyncio.ensure_future(fetch_durations())
     loop.run_until_complete(future)
     return future.result()
-
-
-def write_csv_durations():
-    db_manager = DatabaseManager(**db_settings)
-    durations = list(db_manager.get_all_durations())
-    with open('durations.csv', 'w') as csv_file:
-        csv_writer = csv.writer(csv_file)
-        csv_writer.writerows(durations)
