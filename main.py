@@ -15,7 +15,8 @@ def main():
     for duration in durations.values():
         dataset = db_manager.get_certain_durations(**duration)
         dataset = pd.DataFrame(
-            columns=['name', 'latitude', 'longitude'], data=dataset
+            columns=['name', 'latitude', 'longitude', 'population'],
+            data=dataset
         )
         # k-means clustering
         kmeans = KMeansClustering(dataset)
