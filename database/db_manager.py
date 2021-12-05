@@ -1,6 +1,5 @@
 import csv
 import typing
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database.models import Settlement, Duration, Base
@@ -79,6 +78,7 @@ class DatabaseManager:
             Settlement.name,
             Settlement.latitude,
             Settlement.longitude,
+            Settlement.population
         ).join(
             Duration,
             Duration.settlement_1_id == Settlement.id or

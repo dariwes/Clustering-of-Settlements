@@ -29,12 +29,12 @@ class Duration(Base):
     id = Column(Integer, primary_key=True, autoincrement=True,)
     settlement_1_id = Column(
         Integer,
-        ForeignKey('settlements.settlement_id', ondelete='CASCADE'),
+        ForeignKey('settlements.id', ondelete='CASCADE'),
         nullable=False
     )
     settlement_2_id = Column(
         Integer,
-        ForeignKey('settlements.settlement_id', ondelete='CASCADE'),
+        ForeignKey('settlements.id', ondelete='CASCADE'),
         nullable=False
     )
     duration = Column(Integer, nullable=False)
